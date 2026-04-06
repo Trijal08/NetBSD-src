@@ -35,6 +35,8 @@
 #ifndef _ARM_SAMSUNG_EXYNOS_VAR_H_
 #define _ARM_SAMSUNG_EXYNOS_VAR_H_
 
+#include "exynos_portability.h"
+
 #include <sys/types.h>
 #include <sys/bus.h>
 #include <sys/gpio.h>

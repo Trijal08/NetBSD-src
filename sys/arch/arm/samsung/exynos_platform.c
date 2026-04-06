@@ -31,6 +31,7 @@
 #include "opt_exynos.h"
 #include "opt_multiprocessor.h"
 #include "opt_console.h"
+#include "exynos_portability.h"
 
 #include "ukbd.h"
 
@@ -94,6 +95,7 @@ void exynos_platform_early_putchar(char);
 #define	EXYNOS5800_SYSRAM_SIZE		0x1000
 #define	 EXYNOS5800_SYSRAM_HOTPLUG		0x001c
 
+#if !defined(SOC_EXYNOS9)
 static int
 exynos5800_mpstart(void)
 {
@@ -218,6 +220,7 @@ exynos_platform_mpstart(void)
 
 	return 0;
 }
+#endif
 
 static void
 exynos_platform_init_attach_args(struct fdt_attach_args *faa)
@@ -252,6 +255,7 @@ exynos_platform_device_register(device_t self, void *aux)
 	exynos_device_register(self, aux);
 }
 
+#if !defined(SOC_EXYNOS9)
 static void
 exynos5_platform_reset(void)
 {
@@ -261,6 +265,7 @@ exynos5_platform_reset(void)
 	bus_space_map(bst, EXYNOS5800_PMU_BASE + EXYNOS5800_PMU_SWRESET, 4, 0, &bsh);
 	bus_space_write_4(bst, bsh, 0, 1);
 }
+#endif
 
 static u_int
 exynos_platform_uart_freq(void)
@@ -376,3 +381,55 @@ static const struct fdt_platform exynos5_platform = {
 
 FDT_PLATFORM(exynos5, "samsung,exynos5", &exynos5_platform);
 #endif
+
+#if defined(SOC_EXYNOS9)
+static const struct pmap_devmap *
+exynos9_platform_devmap(void)
+{
+	static const struct pmap_devmap devmap[] = {
+		/*
+		 * Tensor G1/G2/G3/G4 UART/USI mapping.
+		 * Using LX_BLKPAG_OS_BOOT and LX_BLKPAG_ATTR_DEVICE (nGnRnE).
+		 */
+		{
+			.pd_va = 0xffffc00100000000ULL,
+			.pd_pa = 0x10870000,
+			.pd_size = 0x200000, /* 2MB Block mapping */
+			.pd_prot = VM_PROT_READ | VM_PROT_WRITE,
+			/*
+			 * Use LX_BLKPAG_ATTR_DEVICE for nGnRnE.
+			 * Use LX_BLKPAG_OS_BOOT to indicate an early boot mapping.
+			 */
+			.pd_flags = (uint32_t)LX_BLKPAG_ATTR_DEVICE_MEM_NP |
+						(uint32_t)LX_BLKPAG_UXN |
+						(uint32_t)LX_BLKPAG_PXN
+		},
+		{ 0 } /* Equivalent to DEVMAP_ENTRY_END in aarch64 */
+	};
+
+
+	return devmap;
+}
+
+static void
+exynos9_platform_bootstrap(void)
+{
+	/*
+	 * Tensor chips are AArch64 native; bypass the legacy
+	 * 32-bit exynos_bootstrap(5)
+	 */
+	arm_fdt_cpu_bootstrap();
+}
+
+static const struct fdt_platform exynos9_platform = {
+	.fp_devmap = exynos9_platform_devmap,
+	.fp_bootstrap = exynos9_platform_bootstrap,
+	.fp_init_attach_args = exynos_platform_init_attach_args,
+	.fp_device_register = exynos_platform_device_register,
+	.fp_uart_freq = exynos_platform_uart_freq,
+};
+
+/* Matches "google,gs101" (Tensor G1) and later */
+FDT_PLATFORM(exynos9, "google,zumapro", &exynos9_platform);
+#endif
+

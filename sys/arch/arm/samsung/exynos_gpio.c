@@ -32,6 +32,7 @@
 #include "opt_exynos.h"
 #include "opt_arm_debug.h"
 #include "gpio.h"
+#include "exynos_portability.h"
 
 #include <sys/cdefs.h>
 __KERNEL_RCSID(1, "$NetBSD: exynos_gpio.c,v 1.33 2022/02/11 23:48:50 riastradh Exp $");

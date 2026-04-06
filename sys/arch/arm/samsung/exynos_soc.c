@@ -31,6 +31,7 @@
 
 #include "opt_arm_debug.h"
 #include "opt_exynos.h"
+#include "exynos_portability.h"
 
 #include <sys/cdefs.h>
 __KERNEL_RCSID(1, "$NetBSD: exynos_soc.c,v 1.42 2025/12/14 19:43:35 skrll Exp $");
@@ -434,6 +435,15 @@ exynos_dump_clocks(void)
 	DUMP_PLL(5, CPLL);
 	DUMP_PLL(5, GPLL);
 	DUMP_PLL(5, BPLL);
+#endif
+#ifdef SOC_EXYNOS9
+	/* Core and System PLLs typically found in Exynos 9810/9820 */
+	DUMP_PLL(9, APLL);   /* Cluster 0 (Little) */
+	DUMP_PLL(9, MPLL);   /* Cluster 1 (Big) */
+	DUMP_PLL(9, CPLL);   /* Common/System */
+	DUMP_PLL(9, GPLL);   /* Graphic/GPU */
+	DUMP_PLL(9, DPLL);   /* Display */
+	DUMP_PLL(9, VPLL);   /* Video/MFC */
 #endif
 }
 #undef DUMP_PLL

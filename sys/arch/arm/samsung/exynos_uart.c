@@ -168,6 +168,7 @@ static const struct exynos_uart_config exynos_uart_apple = {
 
 static const struct device_compatible_entry compat_data[] = {
 	{ .compat = "samsung,exynos4210-uart",	.data = &exynos_uart_samsung },
+	{ .compat = "google,gs101-uart",	.data = &exynos_uart_samsung },
 	{ .compat = "apple,s5l-uart",		.data = &exynos_uart_apple },
 	DEVICE_COMPAT_EOL
 };

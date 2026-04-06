@@ -23,6 +23,7 @@ defflag opt_exynos.h				SOC_EXYNOS5410: SOC_EXYNOS5
 defflag opt_exynos.h				SOC_EXYNOS5420: SOC_EXYNOS5
 defflag opt_exynos.h				SOC_EXYNOS5440: SOC_EXYNOS5
 defflag opt_exynos.h				SOC_EXYNOS5422: SOC_EXYNOS5
+defflag opt_exynos.h				SOC_EXYNOS9: SOC_EXYNOS, CPU_CORTEX
 
 file	arch/arm/samsung/exynos_platform.c	soc_exynos
 file	arch/arm/samsung/exynos_smc.S		soc_exynos & arm_trustzone_firmware
@@ -99,3 +100,5 @@ file	arch/arm/samsung/exynos5422_clock.c	exynos5422_clock
 device	exy5410clk: fdt_clock
 attach	exy5410clk at fdt with exynos5410_clock
 file	arch/arm/samsung/exynos5410_clock.c	exynos5410_clock
+
+file arch/arm/samsung/exynos_aarch64_glue.c    soc_exynos

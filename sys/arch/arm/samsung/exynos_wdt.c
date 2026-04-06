@@ -30,6 +30,7 @@
  */
 
 #include "exynos_wdt.h"
+#include "exynos_portability.h"
 
 #include <sys/cdefs.h>
 __KERNEL_RCSID(0, "$NetBSD: exynos_wdt.c,v 1.12 2021/01/27 03:10:19 thorpej Exp $");

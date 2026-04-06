@@ -103,6 +103,9 @@
 #if defined(SOC_EXYNOS4)
 #include <arm/samsung/exynos4_reg.h>
 #endif
+#if defined(SOC_EXYNOS9)
+#include <arm/samsung/exynos9_reg.h>
+#endif
 
 
 /* standard frequency settings */
